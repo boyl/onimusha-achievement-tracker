@@ -1,4 +1,4 @@
-﻿#Requires -Version 7.0
+#Requires -Version 7.0
 [CmdletBinding()]
 param([switch]$NoPause, [switch]$Elevated, [string]$GamePath)
 
@@ -150,4 +150,3 @@ if ($MyInvocation.InvocationName -ne '.') {
     if (-not $NoPause) { [void](Read-Host '按 Enter 关闭') }
     exit $code
 }
-
