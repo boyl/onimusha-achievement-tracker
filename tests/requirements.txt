@@ -1,0 +1,2 @@
+lupa>=2.8,<3
+fonttools>=4,<5
