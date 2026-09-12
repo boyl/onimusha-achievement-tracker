@@ -8,6 +8,7 @@
 - 页面标题：All Achievement Map Markers | 全成就图标指引。
 - 版本：0.4.0。
 - 文件类型：Main Files。
+- 标签：User Interface、Quality of Life、Utilities for Players；按 Nexus 当前生成式 AI 规则勾选 AI-Generated Content（代码／界面／翻译）及 AI Media（页面文案）。
 - 语言：English、Chinese；如页面允许区分，则标注 Simplified Chinese。繁体中文游戏设置也使用本 Mod 简体中文界面。
 - 前置依赖：适用于本游戏的 REFramework。可关联 https://www.nexusmods.com/onimushawayofthesword/mods/54 ，并保留 https://github.com/praydog/REFramework-nightly/releases 作为作者更新入口。
 - 兼容范围：Windows Steam 正式版，已验证 build 24769601、TDB 82。不要标为所有旧版本、试玩版或所有平台兼容。
@@ -80,3 +81,7 @@ Insert 打开面板，F8 控制小面板。选择成就、条目与材料地点�
 发布顺序：先提交并推送源码、核对远端 main 与本地 HEAD，再从该提交构建 Nexus 主文件。归档中的 BUILD_INFO.json 记录来源提交。上传后核对页面上的文件名、版本、Requirements 和安装步骤；实际发布地址及核验结果由发布记录另行保存。
 
 参考同游戏发布页：[Onimusha FOV](https://www.nexusmods.com/onimushawayofthesword/mods/35)、[Auto Absorb Souls](https://www.nexusmods.com/onimushawayofthesword/mods/65)。安装说明采用根目录合并 reframework 的方式，前置依赖在 Requirements 中单独关联。
+
+## 开发说明 / Development disclosure
+
+代码和中英文说明由 Codex 辅助生成，经过自动回归及用户实机验收；验证范围与限制已列明。/ Code and bilingual documentation were generated with Codex and checked with automated regression tests and user in-game validation. The tested scope and remaining limitations are documented above.
