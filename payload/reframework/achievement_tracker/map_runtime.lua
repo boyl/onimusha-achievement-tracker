@@ -75,7 +75,9 @@ function R.new(c,language)
                 parent=parent:get_parent_type()
             end
             if object then
-                local data=icon:call("get_ObjectData"):get_field("_MapObjectData")
+                local object_data=icon:call("get_ObjectData")
+                if not object_data then return end -- 图标已启用但尚未绑定物件，不能视为已有目标图标。
+                local data=object_data:get_field("_MapObjectData")
                 if data and data:call("get_MainID"):call("ToString")==guid then found=true end
             end
         end)

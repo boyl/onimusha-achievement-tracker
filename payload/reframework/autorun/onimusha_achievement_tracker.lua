@@ -1,4 +1,4 @@
--- 鬼武者：剑之道 成就与收集追踪 0.4.1
+-- 鬼武者：剑之道 成就与收集追踪 0.4.2
 local base="reframework/achievement_tracker/"
 local model=dofile(base.."model.lua")
 local catalog=dofile(base.."catalog.lua")
@@ -18,7 +18,7 @@ local last_read,last_write=0,0
 local previous_key=false
 local error_state=not initial_ok and tostring(initial_error) or nil
 local ui_error,map_error=nil,nil
-local statistics={version="0.4.1",generation=generation,refreshes=0,errors=0,writes_to_game=0}
+local statistics={version="0.4.2",generation=generation,refreshes=0,errors=0,writes_to_game=0}
 local function report()
     local rows={}
     for _,row in ipairs(control.state.rows) do rows[#rows+1]={id=row.id,count=row.count,total=row.total,unlocked=row.unlocked} end

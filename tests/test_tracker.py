@@ -260,3 +260,23 @@ assert(Map.focus({a,b},{x=100,y=100},32)==nil)
 assert(Map.focus({a,b},{x=10,y=0},32)==a)
 assert(Map.focus({},{x=0,y=0},32)==nil)''')
 print('PASS: 光标聚焦最近圆环、移开恢复、等距稳定及空地图')
+
+source=(root/'map_runtime.lua').read_text(encoding='utf8')
+rt.globals().native_check=source[source.index('    local function has_native_icon'):source.index('    function self.reset')]+ '\nreturn has_native_icon'
+rt.execute('''
+local check=assert(load(native_check))()
+function each(array,limit,fn) for _,icon in ipairs(array) do fn(icon) end end
+local function icon(data)
+    return {call=function(_,method) if method=="get_IsEnable" then return true end return data end,
+    get_type_definition=function() return {get_full_name=function()return "app.GUI060000.cObjectIconBase" end} end}
+end
+local function object(guid)
+    return {get_field=function()return {call=function()return {call=function()return guid end}end}end}
+end
+local icons={icon(nil),icon(object("other"))}
+local gui={get_field=function()return icons end}
+assert(not check(gui,"dog"),"未绑定物件的图标不得报错或遮蔽圆环")
+icons[#icons+1]=icon(object("dog"))
+assert(check(gui,"dog"),"有效原生图标仍应避免重复圆环")
+''')
+print('PASS: 原生图标空绑定跳过，有效同 GUID 图标仍去重')

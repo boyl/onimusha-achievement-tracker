@@ -1,6 +1,6 @@
 # All Achievement Map Markers | 全成就图标指引
 
-Version 0.4.1. Windows Steam full game. Tested with build 24769601 and REFramework TDB 82. Chinese instructions: README.md.
+Version 0.4.2. Windows Steam full game. Tested with build 24769601 and REFramework TDB 82. Chinese instructions: README.md.
 
 Track unlock flags, available achievement counters and individual collection entries across all 52 achievements. Select a target to place a gold ring on the regular game map. The mod reads game data without changing saves, achievements or your manual map markers.
 
@@ -76,3 +76,8 @@ https://github.com/boyl/onimusha-achievement-tracker
 - Fixed misleading 0/52 and waiting-for-save messages after read errors.
 
 Both options default to off and are saved independently. Press Insert to enable them under the relevant achievement. To update, overwrite the reframework folder and restart the game or use Reset scripts once. Keep your existing settings.
+
+## 0.4.2 changes
+
+- The main panel is centered initially and can now be moved by dragging its title bar.
+- Fixed dog tracking pausing when a native map icon has no bound object. Valid native icons still suppress duplicate rings.

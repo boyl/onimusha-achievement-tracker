@@ -153,9 +153,9 @@ function V.new(model,c)
         if item then text(item.name);if item.location then text(item.location,0xFFB8BFCC) end;map_status() else text(row.map_note or t("此成就没有固定收集位置。"),0xFFB8BFCC) end
         text(t("Insert 菜单  ·  F8 隐藏"),0xFF9FA9B8)
     end
-    local function window(name,open,flags,size,pos,body)
+    local function window(name,open,flags,size,pos,body,position_condition)
         imgui.set_next_window_size(size,1)
-        imgui.set_next_window_pos(pos,1,{0,0})
+        imgui.set_next_window_pos(pos,position_condition or 1,{0,0})
         local remains=imgui.begin_window(name,open,flags)
         local cjk=imgui.calc_text_size(t("幻魔杂记"))
         local question=imgui.calc_text_size("????")
@@ -177,8 +177,8 @@ function V.new(model,c)
             assert(measured.x>0 and measured.y>0,t("字体测量无效"))
             if menu_open and c.panel then
                 local w=math.min(760,display.x-40);local h=math.min(900,display.y-40)
-                -- 居中固定在可见区域，较小窗口使用原生滚动。
-                c.panel=window(t("成就与收集追踪###OnimushaTracker"),true,2|4|256,{w,h},{(display.x-w)/2,(display.y-h)/2},panel)
+                -- 首次居中；之后允许拖动标题栏，较小窗口使用原生滚动。
+                c.panel=window(t("成就与收集追踪###OnimushaTracker"),true,2|256,{w,h},{(display.x-w)/2,(display.y-h)/2},panel,2)
                 self.metrics.panel_frames=self.metrics.panel_frames+1
             elseif c.config.hud then
                 local w=math.min(size*20,display.x-24)

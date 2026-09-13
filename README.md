@@ -1,6 +1,6 @@
 # All Achievement Map Markers | 全成就图标指引
 
-版本 0.4.1。支持 Windows Steam 正式版；已验证 build 24769601、REFramework TDB 82。英文说明见 README_EN.md。
+版本 0.4.2。支持 Windows Steam 正式版；已验证 build 24769601、REFramework TDB 82。英文说明见 README_EN.md。
 
 显示 52 项成就的解锁状态、适用的进度和逐项清单，在游戏普通地图上用金色圆环标出所选目标。游戏存档、成就状态和玩家手动标记均不修改。
 
@@ -84,3 +84,8 @@ https://github.com/boyl/onimusha-achievement-tracker
 - 修正错误状态误显示 0/52 和等待读档的提示。
 
 新选项默认关闭，各自保存；按 Insert 在对应成就中开启。升级覆盖 reframework 文件夹后重启游戏或执行一次 Reset scripts。无需删除原有设置。
+
+## 0.4.2 更新
+
+- 主面板首次居中，之后可以拖动标题栏调整位置。
+- 修复原生地图图标尚未绑定物件时，狛犬定位报空对象错误并暂停的问题。有效原生图标仍不重复画环。
