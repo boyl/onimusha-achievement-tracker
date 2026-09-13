@@ -32,7 +32,7 @@ function V.new(model,c)
     local function map_status()
         local s=c.map_state or {status="closed"}
         local labels={disabled=t("地图追踪已关闭。"),unknown=s.note or t("该条目尚未匹配到游戏地图。"),native=s.note,native_object=t("目标已有游戏原生图标，不重复添加圆环。"),non_spatial=s.note,visible=t("金色圆环：当前所选位置。"),offscreen=t("目标在当前视野外；请缩小或移动地图。"),other_area=t("目标地图／楼层：")..(s.label or t("未知")),closed=s.known and t("打开地图定位：")..(s.label or "") or t("正在准备定位信息。"),error=t("地图定位暂停；可在菜单中重新读取。")}
-        text(labels[s.status] or t("正在定位…"),s.status=="visible" and 0xFF8DDB9D or 0xFFB8BFCC)
+        text((s.multi and s.status=="visible" and (s.books and t("圆环显示当前筛选范围内的杂记；名称标注当前所选位置。") or t("圆环表示当前地图候选地点；名称标注当前所选位置。"))) or labels[s.status] or t("正在定位…"),s.status=="visible" and 0xFF8DDB9D or 0xFFB8BFCC)
         if s.error then text(s.error,0xFFFF8E8E) end
     end
     local function status()
@@ -49,6 +49,11 @@ function V.new(model,c)
     end
     local function detail(row)
         progress(row);text(row.description);text(row.source,0xFFB8BFCC)
+        if row.id=="ACHIEVEMENT_020" then
+            check(t("显示当前地图全部候选地点"),"rescue_all")
+        elseif row.id=="ACHIEVEMENT_024" then
+            check(t("显示当前地图全部杂记位置"),"books_all")
+        end
         if row.unlocked and row.count and row.count<row.total then text(t("成就解锁已保留；下方数量反映当前存档或本次事件。"),0xFFFFC46B) end
         if #row.items>0 then
             check(t("只看缺失／未完成条目"),"missing")
@@ -89,7 +94,7 @@ function V.new(model,c)
         else text(row.map_note or t("此成就没有可逐项定位的收集清单。"),0xFFB8BFCC) end
     end
     local function panel()
-        text(t("成就进度 · ")..c.state.unlocked..t(" / 52 已解锁"),0xFFFFD28A)
+        if c.state.status=="ready" then text(t("成就进度 · ")..c.state.unlocked..t(" / 52 已解锁"),0xFFFFD28A) end
         text(t("选择成就与条目，查看定位方式。Insert 关闭菜单；F8 显示／隐藏小面板。"),0xFFB8BFCC)
         if not status() then return end
         local changed,value=imgui.combo(t("分类"),c.config.group,{t("全部"),t("收集与成长"),t("战斗技巧"),t("剧情与挑战")})
@@ -141,6 +146,7 @@ function V.new(model,c)
     end
     local function hud()
         local row=c.selected()
+        if c.state.status=="error" then text(t("读取暂停，请重试。"),0xFFFFC46B);return end
         if c.state.status~="ready" or not row then text(t("成就追踪 · 等待读档"),0xFFB8BFCC);return end
         progress(row)
         local item=c.selected_item()
@@ -189,6 +195,9 @@ function V.new(model,c)
             local s=c.map_state
             self.metrics.marker_visible=false
             if not menu_open and c.config.map_tracking and s and s.status=="visible" then
+                for _,marker in ipairs(s.markers or {s}) do
+                local multi=s.multi
+                local s=marker
                 local color=0xFF50DFFF
                 draw.filled_circle(s.x,s.y,5,color,20)
                 draw.outline_circle(s.x,s.y,14,color,40)
@@ -196,12 +205,15 @@ function V.new(model,c)
                 draw.line(s.x+15,s.y,s.x+20,s.y,color)
                 draw.line(s.x,s.y-20,s.x,s.y-15,color)
                 draw.line(s.x,s.y+15,s.x,s.y+20,color)
-                local label=t("追踪 · ")..s.name..(s.complete and t("（已收集）") or "")
+                if not multi or s.show_label then
+                local label=(s.focused and t("查看 · ") or t("追踪 · "))..s.name..(s.complete and t("（已收集）") or "")
                 local measured_label=imgui.calc_text_size(label)
                 local w=measured_label.x+28;local h=measured_label.y+18
                 local x=math.max(s.bounds.minimum.x,math.min(s.x+24,s.bounds.maximum.x-w))
                 local y=math.max(s.bounds.minimum.y,math.min(s.y+22,s.bounds.maximum.y-h))
                 window("###OnimushaTrackerMapLabel",nil,1|2|4|8|32|256|512|4096|65536|131072,{w,h},{x,y},function()imgui.text_colored(label,color)end)
+                end
+                end
                 self.metrics.marker_visible=true;self.metrics.marker_frames=(self.metrics.marker_frames or 0)+1
             end
         end,debug.traceback)

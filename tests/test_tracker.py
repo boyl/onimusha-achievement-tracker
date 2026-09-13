@@ -197,3 +197,66 @@ for _,key in ipairs({"hud","unfinished","missing","map_tracking"}) do
 end
 ''')
 print('PASS: 英文文字＋中文语音回归、运行时切换清空名称缓存、其他语言回退英文、false 偏好完整保留')
+
+# 狛犬完成状态必须独立于场景中的 MysteryManager 临时数组。
+# 执行真实读取段，模拟传送/救援前后存档状态变化；禁止访问场景管理器。
+source=(root/'runtime.lua').read_text(encoding='utf-8')
+dog_read=source[source.index('        local dogs={}'):source.index('        local sk=')]
+rt.globals().dog_read=dog_read
+rt.globals().positions=module('location_catalog')
+rt.execute('''
+local released={}
+helper={get_field=function(_,key)
+    assert(key=="_Mystery")
+    return {call=function(_,method,key) return released[key] or false end}
+end}
+function singleton(name)
+    assert(name=="app.EnvironmentManager", "不能依赖场景 MysteryManager 的临时数组")
+    return {call=function(_,_,id) return id end}
+end
+function enum(_,key) return key end
+function message(id) return id end
+function t(s) return s end
+local read=assert(load(dog_read))
+raw={groups={}};read()
+assert(raw.groups[23].total==36 and raw.groups[23].count==0)
+local first=next(positions.dogs);released[first]=true
+raw={groups={}};read()
+assert(raw.groups[23].total==36 and raw.groups[23].count==1)
+released={};raw={groups={}};read()
+assert(raw.groups[23].count==0,"读取其他存档后状态必须更新")
+''')
+print('PASS: 狛犬读取不依赖场景临时数组；36 项清单及救助/读档状态更新')
+
+map_source=(root/'map_runtime.lua').read_text(encoding='utf-8')
+rt.globals().batch_source=map_source[map_source.index('        if all_locations then'):map_source.index('        local map=gui:call("getMapPosFromWorldPos",Vector3f.new(target.x')]
+rt.execute('''
+local points={a={area="A",floor="1",x=50,y=50,z=0},b={area="A",floor="1",x=90,y=90,z=0},c={area="B",floor="1",x=50,y=50,z=0},d={area="A",floor="2",x=50,y=50,z=0},e={area="A",floor="1",x=500,y=500,z=0}}
+function resolve(id) return points[id] end
+Vector3f={new=function(x,y,z)return {x=x,y=y,z=z}end}
+geometry=Map;origin={x=0,y=0};unit={x=1,y=1}
+fields={{area="A",floor="1"}};selected={guid="b"};self={};all_locations=true
+row={items={}}
+for _,id in ipairs({"a","b","c","d","e","a"}) do row.items[#row.items+1]={map_targets={{guid=id,name=id}}} end
+gui={get_field=function(_,name) if name=="_MapCursor" then return {get_field=function()return {x=50,y=50}end} elseif name=="_CursorMoveLimitMin" then return {x=0,y=0} else return {x=200,y=200} end end,call=function(_,method,p)return p end}
+local update=assert(load(batch_source));update()
+assert(self.state.multi and #self.state.markers==2,"仅当前地图楼层可见点，去重并排除视野外位置")
+assert(not self.state.markers[1].selected and self.state.markers[2].selected)
+fields={{area="B",floor="1"}};update();assert(#self.state.markers==1,"切换地图重新筛选")
+row.id="ACHIEVEMENT_024";c={config={missing=true}}
+row.items[1].complete=true;row.items[6].complete=true
+fields={{area="A",floor="1"}};update()
+assert(#self.state.markers==1 and self.state.markers[1].name=="b","缺失筛选排除已收集杂记")
+c.config.missing=false;update();assert(#self.state.markers==2,"关闭缺失筛选显示已收集杂记")
+all_locations=false;self.state={status="single"};update();assert(self.state.status=="single")
+local c=Controller.new(model,function()return {rescue_all=true} end,function()end)
+assert(c.config.rescue_all);c.change("rescue_all",false);assert(not c.config.rescue_all)
+''')
+print('PASS: 救援全地图模式筛选、楼层隔离、裁切、去重、选中标签及偏好')
+
+rt.execute('''local a,b={x=0,y=0},{x=20,y=0}
+assert(Map.focus({a,b},{x=17,y=0},32)==b)
+assert(Map.focus({a,b},{x=100,y=100},32)==nil)
+assert(Map.focus({a,b},{x=10,y=0},32)==a)
+assert(Map.focus({},{x=0,y=0},32)==nil)''')
+print('PASS: 光标聚焦最近圆环、移开恢复、等距稳定及空地图')

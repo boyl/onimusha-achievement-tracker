@@ -1,5 +1,5 @@
 {
-  "version": "0.4.0",
+  "version": "0.4.1",
   "files": [
     {
       "path": "reframework/achievement_tracker/catalog.lua",
@@ -7,7 +7,7 @@
     },
     {
       "path": "reframework/achievement_tracker/controller.lua",
-      "sha256": "2570b56c3d51cdb812bd2e7e4b750a090dd84642234392aa64a00c76cea11b85"
+      "sha256": "42e3dc0d7249970f995286575a81e106721eb1e91ff0a64b12ff507d19b81601"
     },
     {
       "path": "reframework/achievement_tracker/hints.lua",
@@ -15,7 +15,7 @@
     },
     {
       "path": "reframework/achievement_tracker/i18n.lua",
-      "sha256": "7e928a1514b7b42b541d28ec8fbea7ccf4d664ecd54f3051ce19b31c04e2ee55"
+      "sha256": "5d2e73c620dd936093c0c17cb6e9e97c437a9a409df8d218d242be022ccb0b94"
     },
     {
       "path": "reframework/achievement_tracker/language_runtime.lua",
@@ -31,7 +31,7 @@
     },
     {
       "path": "reframework/achievement_tracker/map_model.lua",
-      "sha256": "2166bb5274bee870f4e9de9c4f355ee287d9b16d557b058dfccb158cf0271385"
+      "sha256": "7bd581ff3a0c61c2a9f4872a78420e331d30df7d82255eafc0dcf845d00232c4"
     },
     {
       "path": "reframework/achievement_tracker/map_points.lua",
@@ -39,7 +39,7 @@
     },
     {
       "path": "reframework/achievement_tracker/map_runtime.lua",
-      "sha256": "4c9c56cdcd4193b9871f67251ee4d92c76f5dbd6841aacc8dbcdec9ec7cbc485"
+      "sha256": "8ff2228af06ba1028b94127375645fbafac2324c402f86e568946c229d8cb71d"
     },
     {
       "path": "reframework/achievement_tracker/model.lua",
@@ -47,15 +47,15 @@
     },
     {
       "path": "reframework/achievement_tracker/runtime.lua",
-      "sha256": "8abd634f32b72f7d228900e02abdf2e65295f155cdee52cc876ceebdc9b23d13"
+      "sha256": "2a154a3788b44d758a5369de438229d2545b9987712785c18bfcd1b65c6b055b"
     },
     {
       "path": "reframework/achievement_tracker/view.lua",
-      "sha256": "4466d6ea7d296a990054367dd7b41677eab74a43ee4ab747cedac29e1fcdede4"
+      "sha256": "661b72bce0fa921fc26bafa576c8e0d04261196dbe99411e5c17d1d81683bad4"
     },
     {
       "path": "reframework/autorun/onimusha_achievement_tracker.lua",
-      "sha256": "b04dfbc34bdd780dfa66a768aacdd1e6c2efb8dd96b65383d04daf5c478ebbc4"
+      "sha256": "fe2085b0ab45517460b78f66eb6f82ceae6cb290b224a0b4b4fce8b5be3eb683"
     },
     {
       "path": "reframework/fonts/onimusha_tracker_sans.ttf",

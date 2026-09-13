@@ -1,6 +1,6 @@
 # All Achievement Map Markers | 全成就图标指引
 
-版本 0.4.0。支持 Windows Steam 正式版；已验证 build 24769601、REFramework TDB 82。英文说明见 README_EN.md。
+版本 0.4.1。支持 Windows Steam 正式版；已验证 build 24769601、REFramework TDB 82。英文说明见 README_EN.md。
 
 显示 52 项成就的解锁状态、适用的进度和逐项清单，在游戏普通地图上用金色圆环标出所选目标。游戏存档、成就状态和玩家手动标记均不修改。
 
@@ -74,3 +74,13 @@ Nexus 包无需 PowerShell、Python、单独下载字体或其他收集类 Mod�
 ## Source / 源码
 
 https://github.com/boyl/onimusha-achievement-tracker
+
+## 0.4.1 更新
+
+- 修复传送或完成居民救援后读取暂停、圆环消失的问题。
+- 救助居民可选择显示当前地图全部候选地点。
+- 幻魔杂记可选择显示当前地图全部位置，并遵循缺失筛选。
+- 地图光标靠近圆环时显示对应名称，移开恢复当前追踪名称。
+- 修正错误状态误显示 0/52 和等待读档的提示。
+
+新选项默认关闭，各自保存；按 Insert 在对应成就中开启。升级覆盖 reframework 文件夹后重启游戏或执行一次 Reset scripts。无需删除原有设置。

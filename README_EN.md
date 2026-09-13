@@ -1,6 +1,6 @@
 # All Achievement Map Markers | 全成就图标指引
 
-Version 0.4.0. Windows Steam full game. Tested with build 24769601 and REFramework TDB 82. Chinese instructions: README.md.
+Version 0.4.1. Windows Steam full game. Tested with build 24769601 and REFramework TDB 82. Chinese instructions: README.md.
 
 Track unlock flags, available achievement counters and individual collection entries across all 52 achievements. Select a target to place a gold ring on the regular game map. The mod reads game data without changing saves, achievements or your manual map markers.
 
@@ -67,3 +67,12 @@ Landmark summaries reference [PowerPyx](https://www.powerpyx.com/onimusha-way-of
 ## Source / 源码
 
 https://github.com/boyl/onimusha-achievement-tracker
+
+## 0.4.1 changes
+
+- Fixed tracker reads pausing and map rings disappearing after fast travel or resident rescue events.
+- Added optional all-location rings for resident rescue candidates and Genma books on the current map and floor. Book markers follow the missing-items filter.
+- Hover the game map cursor near a ring to inspect its name; moving away restores the selected target label.
+- Fixed misleading 0/52 and waiting-for-save messages after read errors.
+
+Both options default to off and are saved independently. Press Insert to enable them under the relevant achievement. To update, overwrite the reframework folder and restart the game or use Reset scripts once. Keep your existing settings.

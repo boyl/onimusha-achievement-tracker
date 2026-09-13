@@ -23,4 +23,13 @@ function M.valid(point)
     end
     return true
 end
+-- 以真实屏幕坐标选取最近圆环，同距离保留稳定顺序。
+function M.focus(markers,cursor,radius)
+    local best,distance=nil,radius*radius
+    for _,marker in ipairs(markers) do
+        local d=(marker.x-cursor.x)^2+(marker.y-cursor.y)^2
+        if d<=radius*radius and (not best or d<distance) then best=marker;distance=d end
+    end
+    return best
+end
 return M

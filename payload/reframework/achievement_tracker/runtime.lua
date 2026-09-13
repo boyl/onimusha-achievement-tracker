@@ -95,7 +95,6 @@ function R.new(model,catalog,hints,language)
             end
         end
         raw.groups[24]=model.group(books,t("当前存档实际持有的幻魔杂记。"))
-        local mys=singleton("app.MysteryManager")
         local dogs={};local dogkeys={}
         for key in pairs(positions.dogs) do dogkeys[#dogkeys+1]=key end;table.sort(dogkeys)
         for _,key in ipairs(dogkeys) do
@@ -104,7 +103,7 @@ function R.new(model,catalog,hints,language)
             local name=stage_name..t(" · 狛犬 ")..(tonumber(num)+1)
             dogs[#dogs+1]={id="dog:"..key,name=name,complete=helper:get_field("_Mystery"):call("isReleased(app.MysteryDef.SUB_ID_Fixed)",enum("app.MysteryDef.SUB_ID_Fixed",key)),map_targets={{guid=positions.dogs[key],name=name}},native_object=true}
         end
-        assert(#dogs==mys:call("getSubMysteryIDList"):get_size(),t("狛犬定位清单与游戏数量不符"))
+        -- 清单来自随包静态配置；完成状态直接读取存档，不依赖转场时重建的 MysteryManager 数组。
         raw.groups[23]=model.group(dogs,t("当前存档逐只救助状态；编号按游戏配置顺序，不是攻略编号。"))
         raw.groups[22]={count=math.min(raw.groups[23].count,1),total=1,items=dogs,source=raw.groups[23].source}
         local sk=helper:get_field("_SkillTree")

@@ -1,7 +1,7 @@
 local I=dofile("reframework/achievement_tracker/i18n.lua")
 local t=I.translator("en")
 local C={}
-local defaults={selected="ACHIEVEMENT_024",item="",location="",group=1,unfinished=true,missing=true,hud=true,map_tracking=true,hud_x=98,hud_y=12,font_size=22}
+local defaults={selected="ACHIEVEMENT_024",item="",location="",group=1,unfinished=true,missing=true,hud=true,map_tracking=true,rescue_all=false,books_all=false,hud_x=98,hud_y=12,font_size=22}
 function C.new(model,load,save)
     local self={state={status="waiting",rows={},by_id={},unlocked=0},config={},search="",panel=true,page=1,dirty=false}
     local ok,stored=pcall(load)

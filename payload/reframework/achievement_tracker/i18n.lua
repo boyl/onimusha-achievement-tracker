@@ -1,6 +1,11 @@
 -- 纯 Lua 本地化：中文原文为稳定键；其他游戏语言按用户要求回退英文。
 local L={}
 local english={
+    ["查看 · "]="Inspect · ",
+    ["显示当前地图全部杂记位置"]="Show all book locations on the current map",
+    ["圆环显示当前筛选范围内的杂记；名称标注当前所选位置。"]="Rings show books matching your filter; the label identifies your selected location.",
+    ["显示当前地图全部候选地点"]="Show all candidate locations on the current map",
+    ["圆环表示当前地图候选地点；名称标注当前所选位置。"]="Rings show candidates on this map; the label identifies your selected location.",
     ["中文字体未加载：请重新安装 Mod。"]="Tracker font missing. Reinstall the mod, including its fonts folder.",
     ["地图追踪已关闭。"]="Map tracking is off.",
     ["该条目尚未匹配到游戏地图。"]="This entry has not been matched to a game map.",

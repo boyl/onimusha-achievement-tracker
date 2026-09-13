@@ -116,10 +116,39 @@ function R.new(c,language)
         each(area:get_field("_AreaFields"),128,function(field)
             fields[#fields+1]={area=tostring(field:get_field("_AreaID"):get_field("_Value")),floor=tostring(field:get_field("_Floor"):get_field("_Value"))}
         end)
-        if not geometry.matches(target,fields) then self.state.status="other_area";return end
+        local all_locations=row and ((c.config.rescue_all and row.id=="ACHIEVEMENT_020") or (c.config.books_all and row.id=="ACHIEVEMENT_024"))
+        if not all_locations and not geometry.matches(target,fields) then self.state.status="other_area";return end
         local native_gui=gui:get_field("_GUI")
         local origin=native(native_gui,"via.gui.GUI","getPhysicalToVirtualMousePos",td("via.Point"):get_field("Zero"):get_data(nil))
         local unit=native(native_gui,"via.gui.GUI","getPhysicalToVirtualMousePos",td("via.Point"):get_field("One"):get_data(nil))
+        if all_locations then
+            local minimum=geometry.physical(gui:get_field("_CursorMoveLimitMin"),origin,unit)
+            local maximum=geometry.physical(gui:get_field("_CursorMoveLimitMax"),origin,unit)
+            local markers,seen={},{}
+            for _,candidate in ipairs(row.items) do
+                for _,entry in ipairs(candidate.map_targets or {}) do
+                    if not seen[entry.guid] and not (row.id=="ACHIEVEMENT_024" and c.config.missing and candidate.complete) then
+                        seen[entry.guid]=true
+                        local point=resolve(entry.guid)
+                        if point and geometry.matches(point,fields) then
+                            local mp=gui:call("getMapPosFromWorldPos",Vector3f.new(point.x,point.y,point.z))
+                            local pixel=geometry.physical(gui:call("getScreenPosFromMapPos",mp),origin,unit)
+                            if geometry.visible(pixel,minimum,maximum,20) then
+                                markers[#markers+1]={x=pixel.x,y=pixel.y,name=entry.name,selected=entry.guid==selected.guid,bounds={minimum=minimum,maximum=maximum}}
+                            end
+                        end
+                    end
+                end
+            end
+            local cursor=geometry.physical(gui:get_field("_MapCursor"):get_field("<CursorPosition>k__BackingField"),origin,unit)
+            local focused=geometry.focus(markers,cursor,32)
+            for _,marker in ipairs(markers) do
+                marker.focused=marker==focused
+                marker.show_label=focused and marker==focused or (not focused and marker.selected)
+            end
+            self.state={status=#markers>0 and "visible" or "offscreen",multi=true,books=row.id=="ACHIEVEMENT_024",markers=markers,open=true}
+            return
+        end
         local map=gui:call("getMapPosFromWorldPos",Vector3f.new(target.x,target.y,target.z))
         local screen=gui:call("getScreenPosFromMapPos",map)
         local pixel=geometry.physical(screen,origin,unit)
