@@ -1,6 +1,6 @@
 # All Achievement Map Markers | 全成就图标指引
 
-Version 0.4.2. Windows Steam full game. Tested with build 24769601 and REFramework TDB 82. Chinese instructions: README.md.
+Version 0.4.3. Windows Steam full game. Tested with build 24769601 and REFramework TDB 82. Chinese instructions: README.md.
 
 Track unlock flags, available achievement counters and individual collection entries across all 52 achievements. Select a target to place a gold ring on the regular game map. The mod reads game data without changing saves, achievements or your manual map markers.
 
@@ -22,7 +22,9 @@ The Nexus archive needs no PowerShell, Python, separately installed fonts or oth
 ## Controls
 
 - **Insert** opens REFramework and the tracker. Close this menu to see the map ring.
-- **F8** toggles the small HUD.
+- **F8** toggles the small HUD by default. In display settings, click the binding button and press a key. Esc cancels; you can clear the binding or restore F8. Key combinations are not supported.
+- The tracker window starts hidden on a fresh game launch. Use the tracker button in the REFramework script menu to open it. Reset scripts preserves its previous open/closed state.
+- HUD hotkeys are suppressed while editing the framework menu. Close the entire REFramework menu before gameplay.
 - Pick an achievement, then an entry. For materials with several locations, use the location dropdown.
 - Disable the locked-only and missing-only filters to inspect completed entries.
 - Enable map tracking and open the target region and floor. Zoom out or pan if the target is offscreen.
@@ -77,7 +79,11 @@ https://github.com/boyl/onimusha-achievement-tracker
 
 Both options default to off and are saved independently. Press Insert to enable them under the relevant achievement. To update, overwrite the reframework folder and restart the game or use Reset scripts once. Keep your existing settings.
 
-## 0.4.2 changes
+## 0.4.3 changes
 
 - The main panel is centered initially and can now be moved by dragging its title bar.
 - Fixed dog tracking pausing when a native map icon has no bound object. Valid native icons still suppress duplicate rings.
+
+## Known report under investigation in 0.4.3
+
+A user reported a blocked scanning interaction in the first level of a new playthrough cycle. This has not been reproduced or confirmed fixed. Please report the exact location, input device, and whether closing the entire REFramework menu restores the interaction. If Insert cannot open REFramework itself, check framework loading and its menu-key configuration.

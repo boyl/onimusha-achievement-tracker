@@ -1,5 +1,5 @@
 {
-  "version": "0.4.2",
+  "version": "0.4.3",
   "files": [
     {
       "path": "reframework/achievement_tracker/catalog.lua",
@@ -7,15 +7,19 @@
     },
     {
       "path": "reframework/achievement_tracker/controller.lua",
-      "sha256": "42e3dc0d7249970f995286575a81e106721eb1e91ff0a64b12ff507d19b81601"
+      "sha256": "1ee800500c34cf1db4a469caeb034129bcffdb470dd6570ac0900cfb7c179faf"
     },
     {
       "path": "reframework/achievement_tracker/hints.lua",
       "sha256": "b880e891b3e774aa4d8c632800d3e7483ee0956f0226ac1f696452f4c8af6b54"
     },
     {
+      "path": "reframework/achievement_tracker/hotkeys.lua",
+      "sha256": "094e036d4cb6116c1e7c920c7fda812f06e9ac1930697d0621a881e41396ae02"
+    },
+    {
       "path": "reframework/achievement_tracker/i18n.lua",
-      "sha256": "5d2e73c620dd936093c0c17cb6e9e97c437a9a409df8d218d242be022ccb0b94"
+      "sha256": "5afd7c4019fa9f913ad9ab064ba9d6c1358a3b581360d9516afe559faf8a192b"
     },
     {
       "path": "reframework/achievement_tracker/language_runtime.lua",
@@ -51,16 +55,15 @@
     },
     {
       "path": "reframework/achievement_tracker/view.lua",
-      "sha256": "f3e68e98e3c2fcbf2f9cf83d1f24a0944a09d6f012b9b89addc57f5fd224664f"
+      "sha256": "3ae834ccf4a24ca897c1b0a945f4b46729115371994116f4703dcd8dc9dc20ed"
     },
     {
       "path": "reframework/autorun/onimusha_achievement_tracker.lua",
-      "sha256": "b55b3120dfd0e7253600c2705b945ffe08ff733d75b854d53a1009db937d1463"
+      "sha256": "57fafc548dd27d95077342a85d8bc56caf54cb7c15ecc672a79c4be2931ba675"
     },
     {
       "path": "reframework/fonts/onimusha_tracker_sans.ttf",
       "sha256": "b89ebf74da5025a001682197e47e337a4fc000d503936e1b333cf4c378437437"
     }
-  ],
-  "font": "随包分发 Onimusha Tracker Sans；Noto Sans SC 的重命名 400 字重静态实例，SIL OFL 1.1"
+  ]
 }

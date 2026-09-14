@@ -1,9 +1,10 @@
 local I=dofile("reframework/achievement_tracker/i18n.lua")
 local t=I.translator("en")
+local K=dofile("reframework/achievement_tracker/hotkeys.lua")
 local C={}
-local defaults={selected="ACHIEVEMENT_024",item="",location="",group=1,unfinished=true,missing=true,hud=true,map_tracking=true,rescue_all=false,books_all=false,hud_x=98,hud_y=12,font_size=22}
+local defaults={selected="ACHIEVEMENT_024",item="",location="",group=1,unfinished=true,missing=true,hud=true,hud_key=119,map_tracking=true,rescue_all=false,books_all=false,hud_x=98,hud_y=12,font_size=22}
 function C.new(model,load,save)
-    local self={state={status="waiting",rows={},by_id={},unlocked=0},config={},search="",panel=true,page=1,dirty=false}
+    local self={state={status="waiting",rows={},by_id={},unlocked=0},config={},search="",panel=false,page=1,dirty=false}
     local ok,stored=pcall(load)
     if not ok then self.settings_error=t("设置读取失败：")..tostring(stored) end
     stored=ok and type(stored)=="table" and stored or {}
@@ -11,7 +12,9 @@ function C.new(model,load,save)
         if type(stored[key])==type(value) then self.config[key]=stored[key]
         else self.config[key]=value end
     end
+    self.key_capture=K.capture()
     local c=self.config
+    if not K.valid(c.hud_key) then c.hud_key=119 end
     local function t(key) return I.translator(self.state.language)(key) end
     if not c.selected:match("^ACHIEVEMENT_%d%d%d$") then c.selected=defaults.selected end
     if c.group<1 or c.group>4 or c.group%1~=0 then c.group=1 end
@@ -42,6 +45,26 @@ function C.new(model,load,save)
     function self.select(id)
         self.change("selected",id);self.change("item","")
         self.accept(self.state)
+    end
+    -- 重载交接只在同一进程的紧邻加载中有效，读取后由入口立即消费。
+    function self.restore_reset(value,clock,wall)
+        if type(value)~="table" or type(value.panel)~="boolean" or type(value.clock)~="number" or type(value.wall)~="number" then return end
+        local elapsed=clock-value.clock
+        local age=wall-value.wall
+        if elapsed<0 or elapsed>30 or age<0 or age>30 or math.abs(elapsed-age)>2 then return end
+        self.panel=value.panel
+    end
+    function self.reset_snapshot(clock,wall)
+        return {panel=self.panel,clock=clock,wall=wall}
+    end
+    local previous_menu=nil
+    local previous_status="waiting"
+    function self.menu_state(open)
+        if open and previous_menu==false and self.state.status=="ready" then self.panel=true end
+        -- 首次读取前的 waiting 不覆盖重载恢复值；实际进入转场仍收起窗口。
+        if self.state.status=="waiting" and previous_status~="waiting" then self.panel=false end
+        previous_status=self.state.status
+        previous_menu=open
     end
     function self.visible() return model.filter(self.state,c.group,c.unfinished,self.search) end
     function self.selected() return self.state.by_id[c.selected] end

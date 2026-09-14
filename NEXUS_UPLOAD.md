@@ -1,19 +1,19 @@
-# Nexus Mods 上传说明 · 0.4.0
+# Nexus Mods 上传说明 · 0.4.3
 
-推荐上传文件：OnimushaAchievementTracker-0.4.0-Nexus.zip。该包根目录直接包含 reframework，玩家将其合并到 OnimushaWotS.exe 所在目录即可。不要上传开发备份包、work 目录、游戏 DLL、存档或诊断 JSON。
+推荐上传文件：OnimushaAchievementTracker-0.4.3-Nexus.zip。该包根目录直接包含 reframework，玩家将其合并到 OnimushaWotS.exe 所在目录即可。不要上传开发备份包、work 目录、游戏 DLL、存档或诊断 JSON。
 
 ## 页面设置
 
 - 游戏分区：Onimusha: Way of the Sword（onimushawayofthesword）。
 - 页面标题：All Achievement Map Markers | 全成就图标指引。
-- 版本：0.4.0。
+- 版本：0.4.3。
 - 文件类型：Main Files。
 - 标签：User Interface、Quality of Life、Utilities for Players；按 Nexus 当前生成式 AI 规则勾选 AI-Generated Content（代码／界面／翻译）及 AI Media（页面文案）。
 - 语言：English、Chinese；如页面允许区分，则标注 Simplified Chinese。繁体中文游戏设置也使用本 Mod 简体中文界面。
 - 前置依赖：适用于本游戏的 REFramework。可关联 https://www.nexusmods.com/onimushawayofthesword/mods/54 ，并保留 https://github.com/praydog/REFramework-nightly/releases 作为作者更新入口。
 - 兼容范围：Windows Steam 正式版，已验证 build 24769601、TDB 82。不要标为所有旧版本、试玩版或所有平台兼容。
 - 安装方式：Manual download。Vortex 自动部署未验证，不标注已支持。
-- 截图：建议使用当前 0.4.0 的中文面板、英文面板及地图圆环各一张，避免使用旧版地图名称错误的截图。
+- 截图：建议使用当前 0.4.3 的中文面板、英文面板及地图圆环各一张，避免使用旧版地图名称错误的截图。
 
 Nexus 官方建议将必要的其他 Mod 加入 Requirements，让下载者能看到依赖提示：[作者最佳实践](https://help.nexusmods.com/article/136-best-practices-for-mod-authors)。
 

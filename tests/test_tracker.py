@@ -280,3 +280,65 @@ icons[#icons+1]=icon(object("dog"))
 assert(check(gui,"dog"),"有效原生图标仍应避免重复圆环")
 ''')
 print('PASS: 原生图标空绑定跳过，有效同 GUID 图标仍去重')
+
+rt.globals().Keys=module('hotkeys')
+rt.execute('''
+local k=Keys.new()
+assert(not k.update(119,true,false),"启动时按住不触发")
+assert(not k.update(119,false,false))
+assert(k.update(119,true,false))
+assert(not k.update(119,true,false),"长按只触发一次")
+assert(not k.update(120,true,false),"换绑后先释放")
+k.update(120,false,false);assert(not k.update(120,true,true),"编辑菜单不切换 HUD")
+assert(not k.update(120,true,false),"关闭菜单仍按住不补触发")
+k.update(120,false,false);assert(k.update(120,true,false))
+assert(not k.update(0,true,false))
+for _,value in ipairs({-1,256,1.5,"F8"}) do
+    local c=Controller.new(model,function()return {hud_key=value}end,function()end)
+    assert(c.config.hud_key==119)
+end
+local saved
+local c=Controller.new(model,function()return {hud=false,hud_key=0}end,function(v)saved=v end)
+assert(c.config.hud_key==0 and not c.config.hud and not c.panel)
+c.menu_state(true);assert(not c.panel,"首次框架菜单已开时不自动抢占")
+c.state.status="ready";c.menu_state(false);c.menu_state(true);assert(c.panel)
+c.panel=false;c.menu_state(true);assert(not c.panel,"关闭按钮有效")
+c.menu_state(false);c.menu_state(true);assert(c.panel,"重新打开框架菜单恢复窗口")
+c.state.status="waiting";c.menu_state(true);assert(not c.panel,"新周目转场关闭交互面板")
+c.change("hud_key",121);c.persist();assert(saved.hud_key==121)
+''')
+print('PASS: 自定义按键、禁用、换绑释放、长按、菜单输入隔离、旧配置迁移及窗口重开')
+
+rt.execute('''
+local held={[13]=true,[1]=true}
+local function read(k)return held[k]==true end
+local capture=Keys.capture();capture.begin(read)
+assert(capture.update(read)==nil and capture.active,"打开控件时已按住的 Enter 和鼠标不录入")
+held[13]=false;capture.update(read);held[186]=true
+assert(capture.update(read)==186 and not capture.active,"可直接录入标点键")
+capture.begin(read);held[27]=true
+assert(capture.update(read)==nil and not capture.active,"Esc 取消且不改键")
+held={};capture.begin(read);held[17]=true
+assert(capture.update(read)==nil and capture.active,"修饰键不单独绑定")
+held[120]=true;assert(capture.update(read)==120)
+held={};capture.begin(read);capture.cancel();held[121]=true
+assert(capture.update(read)==nil,"关闭菜单后不捕获按键")
+assert(Keys.valid(186) and Keys.valid(135) and not Keys.valid(27) and not Keys.valid(1))
+''')
+print('PASS: 直接录键、标点/F24、Esc取消、既有按键释放、忽略鼠标与单独修饰键')
+
+rt.execute("""
+local a=Controller.new(model,function()end,function()end)
+a.panel=true
+local token=a.reset_snapshot(100,1000)
+local b=Controller.new(model,function()end,function()end)
+b.restore_reset(token,101,1001);b.menu_state(true);assert(b.panel,"重载初始等待保留打开状态")
+b.state.status="ready";b.menu_state(true);assert(b.panel)
+b.state.status="waiting";b.menu_state(true);assert(not b.panel,"真实转场仍关闭")
+a.panel=false;b.restore_reset(a.reset_snapshot(100,1000),101,1001);assert(not b.panel)
+for _,times in ipairs({{1,1001},{131,1031},{101,1100}}) do
+ local cold=Controller.new(model,function()end,function()end)
+ cold.restore_reset(token,times[1],times[2]);assert(not cold.panel,"拒绝重启或过期交接")
+end
+""")
+print('Reset panel visibility checks passed')

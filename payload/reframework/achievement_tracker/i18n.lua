@@ -1,6 +1,17 @@
 -- 纯 Lua 本地化：中文原文为稳定键；其他游戏语言按用户要求回退英文。
 local L={}
 local english={
+    ["请按要绑定的键（Esc 取消）"]="Press a key (Esc to cancel)",
+    ["点击改键："]="Change key: ",
+    ["清除快捷键"]="Clear binding",
+    ["支持单个键盘按键；修饰键不能单独绑定。"]="Supports a single keyboard key; modifier keys cannot be bound alone.",
+    ["禁用快捷键"]="Disabled",
+    ["显示／隐藏小面板快捷键"]="HUD toggle key",
+    ["恢复默认快捷键 F8"]="Reset hotkey to F8",
+    ["小面板快捷键："]="HUD key: ",
+    ["请避免与游戏或 REFramework 菜单按键冲突。编辑菜单时暂停小面板快捷键。"]="Avoid conflicts with game controls or the REFramework menu key. HUD hotkeys are paused while editing the menu.",
+    ["Insert 是 REFramework 默认菜单键；若已改键，请使用对应按键。关闭追踪窗口后重新打开菜单可恢复，也可点击下方打开按钮。"]="Insert is REFramework's default menu key. Use your configured key if changed. Reopening the menu restores the tracker, or use its Open button.",
+    ["选择成就与条目，查看定位方式。关闭 REFramework 菜单后继续游戏；快捷键可在设置中修改。"]="Select an achievement and entry. Close the REFramework menu to resume gameplay; customize the HUD key in settings.",
     ["查看 · "]="Inspect · ",
     ["显示当前地图全部杂记位置"]="Show all book locations on the current map",
     ["圆环显示当前筛选范围内的杂记；名称标注当前所选位置。"]="Rings show books matching your filter; the label identifies your selected location.",

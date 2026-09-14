@@ -1,9 +1,15 @@
--- 鬼武者：剑之道 成就与收集追踪 0.4.2
+-- 鬼武者：剑之道 成就与收集追踪 0.4.3
 local base="reframework/achievement_tracker/"
 local model=dofile(base.."model.lua")
 local catalog=dofile(base.."catalog.lua")
 local runtime_module=dofile(base.."runtime.lua")
 local control=dofile(base.."controller.lua").new(model,function()return json.load_file("onimusha_achievement_tracker_config.json")end,function(v)assert(json.dump_file("onimusha_achievement_tracker_config.json",v),"无法写入设置文件")end)
+local reset_file="onimusha_achievement_tracker_reset.json"
+local reset_ok,reset_state=pcall(json.load_file,reset_file)
+if reset_ok and reset_state then
+    control.restore_reset(reset_state,os.clock(),os.time())
+    assert(json.dump_file(reset_file,{}),"无法消费重载界面状态")
+end
 local view,runtime,map,language
 local initial_ok,initial_error=pcall(function()
     language=dofile(base.."language_runtime.lua").new()
@@ -15,10 +21,10 @@ local generation=(_G.onimusha_achievement_tracker_generation or 0)+1
 _G.onimusha_achievement_tracker_generation=generation
 local alive=function()return _G.onimusha_achievement_tracker_generation==generation end
 local last_read,last_write=0,0
-local previous_key=false
+local hotkey=dofile(base.."hotkeys.lua").new()
 local error_state=not initial_ok and tostring(initial_error) or nil
 local ui_error,map_error=nil,nil
-local statistics={version="0.4.2",generation=generation,refreshes=0,errors=0,writes_to_game=0}
+local statistics={version="0.4.3",generation=generation,refreshes=0,errors=0,writes_to_game=0}
 local function report()
     local rows={}
     for _,row in ipairs(control.state.rows) do rows[#rows+1]={id=row.id,count=row.count,total=row.total,unlocked=row.unlocked} end
@@ -33,9 +39,13 @@ end
 re.on_frame(function()
     if not alive() then return end
     local now=os.clock()
-    local key=reframework:is_key_down(0x77) -- F8，按下沿切换，长按不反复触发。
-    if key and not previous_key then control.change("hud",not control.config.hud) end
-    previous_key=key
+    local menu_open=reframework:is_drawing_ui()
+    control.menu_state(menu_open)
+    if not menu_open or not control.panel then control.key_capture.cancel() end
+    local binding=control.key_capture.update(function(code)return reframework:is_key_down(code)end)
+    if binding then control.change("hud_key",binding) end
+    local key=control.config.hud_key
+    if hotkey.update(key,key~=0 and reframework:is_key_down(key),menu_open) then control.change("hud",not control.config.hud) end
     if control.retry then
         if not initial_ok then
             initial_ok,initial_error=pcall(function()
@@ -65,7 +75,7 @@ re.on_frame(function()
         else map_error=tostring(err);map.reset();control.map_state={status="error",error=map_error};log.error("[Onimusha Tracker Map] "..map_error) end
     end
     if view and not ui_error then
-        local ok,err=pcall(view.draw,reframework:is_drawing_ui())
+        local ok,err=pcall(view.draw,menu_open)
         if not ok then ui_error=tostring(err);log.error("[Onimusha Tracker UI] "..ui_error) end
     end
     control.persist()
@@ -77,6 +87,11 @@ re.on_draw_ui(function()
     else
         imgui.text("Onimusha Tracker: "..tostring(ui_error or error_state))
         if imgui.button("Retry tracker") then ui_error=nil;control.retry=true end
+    end
+end)
+re.on_script_reset(function()
+    if alive() then
+        assert(json.dump_file(reset_file,control.reset_snapshot(os.clock(),os.time())),"无法保存重载界面状态")
     end
 end)
 re.on_config_save(function()if alive() then control.dirty=true;control.persist() end end)

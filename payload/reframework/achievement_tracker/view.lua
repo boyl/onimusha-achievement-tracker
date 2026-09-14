@@ -1,5 +1,6 @@
 local I=dofile("reframework/achievement_tracker/i18n.lua")
 local t=I.translator("en")
+local K=dofile("reframework/achievement_tracker/hotkeys.lua")
 local V={}
 -- 宽度来自实际字体测量；UTF-8 字符边界换行不会拆坏中文。
 function V.wrap(text,width,measure)
@@ -95,7 +96,7 @@ function V.new(model,c)
     end
     local function panel()
         if c.state.status=="ready" then text(t("成就进度 · ")..c.state.unlocked..t(" / 52 已解锁"),0xFFFFD28A) end
-        text(t("选择成就与条目，查看定位方式。Insert 关闭菜单；F8 显示／隐藏小面板。"),0xFFB8BFCC)
+        text(t("选择成就与条目，查看定位方式。关闭 REFramework 菜单后继续游戏；快捷键可在设置中修改。"),0xFFB8BFCC)
         if not status() then return end
         local changed,value=imgui.combo(t("分类"),c.config.group,{t("全部"),t("收集与成长"),t("战斗技巧"),t("剧情与挑战")})
         if changed then c.change("group",value) end
@@ -127,6 +128,17 @@ function V.new(model,c)
         if row then detail(row) end
         imgui.spacing()
         if imgui.collapsing_header(t("显示设置与帮助")) then
+            text(t("显示／隐藏小面板快捷键"))
+            local binding=c.config.hud_key==0 and t("禁用快捷键") or K.name(c.config.hud_key)
+            if imgui.button((c.key_capture.active and t("请按要绑定的键（Esc 取消）") or t("点击改键：")..binding).."###TrackerBindHUD") then
+                c.key_capture.begin(function(code)return reframework:is_key_down(code)end)
+            end
+            text(t("支持单个键盘按键；修饰键不能单独绑定。"))
+            if imgui.button(t("清除快捷键")) then c.key_capture.cancel();c.change("hud_key",0) end
+            imgui.same_line()
+            if imgui.button(t("恢复默认快捷键 F8")) then c.key_capture.cancel();c.change("hud_key",119) end
+            text(t("请避免与游戏或 REFramework 菜单按键冲突。编辑菜单时暂停小面板快捷键。"))
+            text(t("Insert 是 REFramework 默认菜单键；若已改键，请使用对应按键。关闭追踪窗口后重新打开菜单可恢复，也可点击下方打开按钮。"))
             local sizes={18,22,26};local ix=c.config.font_size==18 and 1 or c.config.font_size==22 and 2 or 3
             changed,value=imgui.combo(t("字号"),ix,{t("小 (18)"),t("中 (22)"),t("大 (26)")})
             if changed then c.change("font_size",sizes[value]) end
@@ -151,7 +163,7 @@ function V.new(model,c)
         progress(row)
         local item=c.selected_item()
         if item then text(item.name);if item.location then text(item.location,0xFFB8BFCC) end;map_status() else text(row.map_note or t("此成就没有固定收集位置。"),0xFFB8BFCC) end
-        text(t("Insert 菜单  ·  F8 隐藏"),0xFF9FA9B8)
+        text(t("小面板快捷键：")..(c.config.hud_key==0 and t("禁用快捷键") or K.name(c.config.hud_key)),0xFF9FA9B8)
     end
     local function window(name,open,flags,size,pos,body,position_condition)
         imgui.set_next_window_size(size,1)
@@ -178,7 +190,7 @@ function V.new(model,c)
             if menu_open and c.panel then
                 local w=math.min(760,display.x-40);local h=math.min(900,display.y-40)
                 -- 首次居中；之后允许拖动标题栏，较小窗口使用原生滚动。
-                c.panel=window(t("成就与收集追踪###OnimushaTracker"),true,2|256,{w,h},{(display.x-w)/2,(display.y-h)/2},panel,2)
+                c.panel=window(t("成就与收集追踪###OnimushaTracker"),true,2|256|4096,{w,h},{(display.x-w)/2,(display.y-h)/2},panel,2)
                 self.metrics.panel_frames=self.metrics.panel_frames+1
             elseif c.config.hud then
                 local w=math.min(size*20,display.x-24)
