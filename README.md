@@ -1,3 +1,5 @@
+![GitHub Release Downloads](https://img.shields.io/github/downloads/boyl/onimusha-achievement-tracker/total?label=Downloads&color=blue)
+
 # All Achievement Map Markers | 全成就图标指引
 
 版本 0.4.3。支持 Windows Steam 正式版；已验证 build 24769601、REFramework TDB 82。英文说明见 README_EN.md。
